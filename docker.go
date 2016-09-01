@@ -33,6 +33,7 @@ type PortMapping struct {
 	ContainerPort int                `json:"containerPort,omitempty"`
 	HostPort      int                `json:"hostPort"`
 	Labels        *map[string]string `json:"labels,omitempty"`
+	Name          string             `json:"name,omitempty"`
 	ServicePort   int                `json:"servicePort,omitempty"`
 	Protocol      string             `json:"protocol,omitempty"`
 }
