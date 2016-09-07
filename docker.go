@@ -183,6 +183,27 @@ func (docker *Docker) EmptyPortMappings() *Docker {
 	return docker
 }
 
+// AddLabel adds a label to a PortMapping
+//		name:	the name of the label
+//		value: value for this label
+func (p *PortMapping) AddLabel(name, value string) *PortMapping {
+	if p.Labels == nil {
+		p.EmptyLabels()
+	}
+	(*p.Labels)[name] = value
+
+	return p
+}
+
+// EmptyLabels explicitly empties the labels -- use this if you need to empty
+// the labels of a port mapping that already has labels set (setting labels to
+// nil will keep the current value)
+func (p *PortMapping) EmptyLabels() *PortMapping {
+	p.Labels = &map[string]string{}
+
+	return p
+}
+
 // AddParameter adds a parameter to the docker execution line when creating the container
 //		key:			the name of the option to add
 //		value:		the value of the option
