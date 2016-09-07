@@ -140,7 +140,11 @@ func (docker *Docker) Host() *Docker {
 //		ports:			the TCP ports the container is exposing
 func (docker *Docker) Expose(ports ...int) *Docker {
 	for _, port := range ports {
-		docker.ExposePort(port, 0, 0, "tcp")
+		docker.ExposePort(PortMapping{
+			ContainerPort: port,
+			HostPort:      0,
+			ServicePort:   0,
+			Protocol:      "tcp"})
 	}
 	return docker
 }
@@ -149,27 +153,23 @@ func (docker *Docker) Expose(ports ...int) *Docker {
 //		ports:			the UDP ports the container is exposing
 func (docker *Docker) ExposeUDP(ports ...int) *Docker {
 	for _, port := range ports {
-		docker.ExposePort(port, 0, 0, "udp")
+		docker.ExposePort(PortMapping{
+			ContainerPort: port,
+			HostPort:      0,
+			ServicePort:   0,
+			Protocol:      "udp"})
 	}
 	return docker
 }
 
 // ExposePort exposes an port in the container
-//		containerPort:			the container port which is being exposed
-//		hostPort:						the host port we should expose it on
-//		servicePort:				check the marathon documentation
-//		protocol:						the protocol to use TCP, UDP
-func (docker *Docker) ExposePort(containerPort, hostPort, servicePort int, protocol string) *Docker {
+func (docker *Docker) ExposePort(portMapping PortMapping) *Docker {
 	if docker.PortMappings == nil {
 		docker.EmptyPortMappings()
 	}
 
 	portMappings := *docker.PortMappings
-	portMappings = append(portMappings, PortMapping{
-		ContainerPort: containerPort,
-		HostPort:      hostPort,
-		ServicePort:   servicePort,
-		Protocol:      protocol})
+	portMappings = append(portMappings, portMapping)
 	docker.PortMappings = &portMappings
 
 	return docker
